@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Show Livre{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <table class="table table-bordered table-sm">
+        <tr>
+            <td>
+                {% if livre.imageLivre != '' %}
+                    <img src="{{livre.imageLivre}}" class="img-fluid mx-auto d-block" width='400' height='420'>
+                {% else %}
+                    <img src="../OIP.jpg" class="mx-auto d-block" width='400' height='420'>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td class="text-center">
+                <p>Titre : {{livre.titreLivre}}</p>
+                <p>Auteur : {{livre.prenomAuteur}} {{livre.nomAuteur}}</p>
+                <p>Thème : 
+                {% for theme in livre.idThemeLivre %}
+                    {{theme.themeLivre}}
+                {% endfor %}
+                </p>
+                <p>Format : {{livre.idFormatLivre.formatLivre}}</p>
+                <p>Editeur : {{livre.idEditeur.editeur}} </p>
+                <p>Année d'édition : {{livre.anneeEdition}}</p>
+                <p>Langue : {{livre.idLangue.langue}}</p>
+                <p>Prix : {{livre.prixLivre}}€</p>
+            </td>
+        </tr>
+    </table>
+    <p class="text-center"><a class="btn btn-success" href="{{path('reservation',{'id':livre.idLivre})}}">Réserver ce livre</a></p>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+        $('table').removeClass('table-responsive')
+        if(window.innerWidth<=450)
+        {
+            $('img').attr('width','250');
+            $('img').attr('height','300');
+        }
+
+        $(window).resize(function()
+        {
+            if(window.innerWidth<=450)
+            {
+                $('img').attr('width','250');
+                $('img').attr('height','300');
+            }
+            else
+            {
+                $('img').attr('width','400');
+                $('img').attr('height','420');
+            }
+        })
+</script>
+{% endblock %}

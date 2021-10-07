@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Listes utilisateurs{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <p class="text-center underline font-weight-bold">Liste des utilisateurs</p>
+        <table class="table table-bordered">
+            <thead>
+                <th>Mail</th>
+                <th>Roles</th>
+                <th>Nom</th>
+            </thead>
+            <tbody>
+            {% for user in utilisateur %}
+                <tr>
+                    <td>
+                        {{user.mailUser}}
+                    </td>
+                    <td>
+                        {% for role in user.roles %}
+                            {{role}}
+                            <br/>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {{user.prenomUser}} {{user.nomUser}}
+                    </td>
+                    <td>
+                        <a href="{{path('editRoles',{'id':user.idUser})}}" class="btn btn-success btn-sm">Modifier Roles</a>
+                    </td>
+                    <td>
+                        <a href="{{path('editPassword',{'id':user.idUser})}}" class="btn btn-success btn-sm">Modifier Mot de Passe</a>
+                    </td>
+                    <td>
+                        <a href="{{path('deleteUser',{'id':user.idUser})}}" class="btn btn-danger btn-sm">Supprimer Utilisateur</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script>
+    if(window.innerWidth<=700)
+    {
+        $('table').addClass('table-responsive');
+    }
+
+    $(window).resize(function()
+    {
+        if(window.innerWidth<=700)
+        {
+            $('table').addClass('table-responsive');
+        }
+        else
+        {
+            $('table').removeClass('table-responsive');
+        }
+    })
+</script>
+
+{% endblock %}

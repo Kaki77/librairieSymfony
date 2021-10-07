@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réservation{% endblock %}
+
+{% block body %}
+<p class="text-center alert-danger">Vous allez validé la réservation de ce livre</p>
+<div class="container">
+    <table class="table table-bordered table-sm">
+
+            <tr>
+                <td>
+                    {% if livre.imageLivre != '' %}
+                        <img src="{{livre.imageLivre}}" class="img-fluid mx-auto d-block" width='100' height='120'>
+                    {% else %}
+                        <img src="../OIP.jpg" class="mx-auto d-block" width='100' height='120'>
+                    {% endif %}
+                </td>
+                <td>
+                    <p>Titre : {{livre.titreLivre}}</p>
+                    <p>Auteur : {{livre.prenomAuteur}} {{livre.nomAuteur}}</p>
+                    <p>Thème : 
+                    {% for theme in livre.idThemeLivre %}
+                        {{theme.themeLivre}}
+                    {% endfor %}
+                    </p>
+                    <p>Prix : {{livre.prixLivre}}€</p>
+                </td>
+            </tr>
+    </table>
+    <p class="text-center"><a class="btn btn-info" href="{{path('reservation_validate',{'id':livre.idLivre})}}">Je valide ma réservation</a></p>
+</div>
+
+{% endblock %}

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        {% block stylesheets %}{% endblock %}
+        <link rel="stylesheet" href="../../../style.css">
+    </head>
+
+    <body>
+
+        <div class="container-fluid no-narrow">
+            <div class="row">
+                <div class="h-100" id="menu">
+                    <nav id="accordion">
+
+                        <div class="card">
+                            <div class="card-header">
+                                <button class="btn btn-link btn-block"><a href="{{path('home')}}">Accueil</a></button>
+                            </div>
+                        </div>
+
+                        {% if app.user and is_granted('ROLE_ADMIN') %}
+                        <div class="card">
+                            <div class="card-header" id="livre">
+                                <button class="btn btn-link btn-block" data-toggle="collapse" data-target="#collapseLivre" aria-expanded="true" aria-controls="collapseLivre">
+                                    Livres
+                                </button>
+                            </div>
+                            <div id="collapseLivre" class="collapse" aria-labelledby="livre" data-parent="#accordion">
+                                <div class="card-body">
+                                    <a class="nav-link" href="{{path('livre')}}">Tous les livres</a>
+                                    <a class="nav-link" href="{{path('newLivre')}}">Ajouter livre</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="card">
+                            <div class="card-header">
+                                <button class="btn btn-link btn-block"><a href="{{path('livre')}}">Tous nos livres</a></button>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if app.user and is_granted('ROLE_ADMIN') %}
+                        <div class="card">
+                            <div class="card-header" id="fournisseur">
+                                <button class="btn btn-link btn-block" data-toggle="collapse" data-target="#collapseFournisseur" aria-expanded="false" aria-controls="collapseFournisseur">
+                                    Fournisseurs
+                                </button>
+                            </div>
+                            <div id="collapseFournisseur" class="collapse" aria-labelledby="fournisseur" data-parent="#accordion">
+                                <div class="card-body">
+                                    <a class="nav-link" href="{{path('fournisseur')}}">Tous les fournisseurs</a>
+                                    <a class="nav-link" href="{{path('newFournisseur')}}">Ajouter fournisseur</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if app.user and is_granted('ROLE_ADMIN') %}
+                        <div class="card">
+                            <div class="card-header" id="commande">
+                                <button class="btn btn-link btn-block" data-toggle="collapse" data-target="#collapseCommande" aria-expanded="false" aria-controls="collapseCommande">
+                                    Commandes
+                                </button>
+                            </div>
+                            <div id="collapseCommande" class="collapse" aria-labelledby="commande" data-parent="#accordion">
+                                <div class="card-body">
+                                    <a class="nav-link" href="{{path('commande')}}">Toutes les commandes</a>
+                                    <a class="nav-link" href="{{path('newCommande')}}">Ajouter commande</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if app.user and is_granted('ROLE_ADMIN') %}
+                        <div class="card">
+                            <div class="card-header">
+                                <button class="btn btn-link btn-block"><a href="{{path('user')}}">Liste Utilisateurs</a></button>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="card">
+                            <div class="card-header" id="compte">
+                                <button class="btn btn-link btn-block">
+                                    <a href="{{path('showUser')}}">Mon Compte</a>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                {% if app.user %}
+                                    <button class="btn btn-link btn-block"><a href="{{path('app_logout')}}">Se déconnecter</a></button>
+                                {% else %}
+                                    <button class="btn btn-link btn-block"><a href="{{path('app_login')}}">Se connecter</a></button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+                <div class="col-1">
+                    <button type="button" class="btn btn-dark btn-lg sticky-top" id="buttonMenu">☰</button>
+                </div>
+                <div class="col-md-12 col-lg-9" id="main">
+                    <header id="header">
+                        <h1 class="text-center fs-350">Librairie Kaki</h1>
+                        <p class="text-right font-italic font-weight-bold">
+                            {% if app.user %}
+                                Bienvenue {{app.user.nomUser|upper}} {{app.user.prenomUser|capitalize}}
+                                <br/> 
+                                <a href="{{path('app_logout')}}" class="underline">Se déconnecter</a>
+                            {% else %}    
+                                <a href="{{path('app_login')}}" class="underline">Se Connecter</a><br/><a href="{{path('register')}}" class="underline">S'inscrire</a>
+                            {% endif %}    
+                        </p>
+                        <br/>
+                        <br/>
+                        <br/>
+                    </header>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <div class="col-auto">  
+                        {% block body %}{% endblock %}
+                    </div>
+                    <br/>
+                    <br/>
+                    <footer>
+                        <div class="container-fluid bg-gray">
+                            <div class="col-auto">
+                                <form id="contact">
+                                    <p class="text-center font-weight-bold underline">Contactez-nous</p>
+                                    <br/>
+                                    Nom
+                                    <br/>
+                                    <p class="text-center"><input type="text" name="nom" placeholder="Votre nom"></p>
+                                    Mail
+                                    <br/>
+                                    <p class="text-center"><input type="email" name="mail" placeholder="Votre mail"></p>
+                                    Sujet
+                                    <br/>
+                                    <p class="text-center"><input type="text" name="sujet" placeholder="Sujet du message"></p>
+                                    Message
+                                    <br/>
+                                    <p class="text-center"><textarea rows="10" name="msg" placeholder="Ecrivez votre message ici"></textarea></p>
+                                    <input type="submit" value="Envoyer">
+                                </form>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        
+        <script>
+            $('#buttonMenu').addClass('vh-100');
+            if(window.innerWidth<1518)
+            {
+                $('#buttonMenu').removeClass('vh-100');
+            } 
+            else
+            {
+                $('#buttonMenu').addClass('vh-100');
+            }
+            $(window).resize(function()
+            {
+               if(window.innerWidth<1518)
+                {
+                    $('#buttonMenu').removeClass('vh-100');
+                } 
+                else
+                {
+                    $('#buttonMenu').addClass('vh-100');
+                }
+            })
+                
+
+            $('#buttonMenu').click(function()
+            {
+                if($('#menu').hasClass('visible'))
+                {
+                    $('#buttonMenu').css('margin-left','0px');
+                    $('#menu').removeClass('visible')
+                    $('#main').css('margin-left','0px'); 
+                }
+                else
+                {
+                    $('#buttonMenu').css('margin-left','250px');
+                    $('#menu').addClass('visible')
+                    $('#main').css('margin-left','250px');
+                }
+            })
+        </script>
+
+        {% block javascripts %}{% endblock %}
+    </body>
+
+</html>

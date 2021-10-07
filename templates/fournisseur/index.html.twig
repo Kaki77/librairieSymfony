@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste Fournisseur{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        {% for message in app.flashes('message') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <table class="table table-bordered mx-auto w-auto table-sm">
+            <thead>
+                <th>Code Fournisseur</th>
+                <th>Raison Sociale</th>
+                <th>Rue</th>
+                <th>Code Postal</th>
+                <th>Ville</th>
+                <th>Pays</th>
+                <th>Téléphone</th>
+                <th>Site</th>
+                <th>Mail</th>
+            </thead>
+            <tbody>
+                {% for f in fournisseur %}
+                <tr>
+                    <td>{{f.codeFournisseur}}</td>
+                    <td>{{f.raisonSociale}}</td>
+                    <td>{{f.adresse}}</td>
+                    <td>{{f.codePostal}}</td>
+                    <td>{{f.ville}}</td>
+                    <td>{{f.pays}}</td>
+                    <td>{{f.telephone}}</td>
+                    <td>{{f.site}}</td>
+                    <td>{{f.mail}}</td>
+                    <td><a class="btn btn-success" href="{{path('editFournisseur',{'id':f.idFournisseur})}}">Modifier Fournisseur</a></td>
+                    <td><a class="btn btn-danger" href="{{path('deleteFournisseur',{'id':f.idFournisseur})}}">Supprimer Fournisseur</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+
+<script>
+    if(window.innerWidth<=1518)
+    {
+        $('table').addClass('table-responsive');
+    }
+
+    $(window).resize(function()
+    {
+        if(window.innerWidth<=1518)
+        {
+            $('table').addClass('table-responsive');
+        }
+        else
+        {
+            $('table').removeClass('table-responsive');
+        }
+    })
+</script>
+
+{% endblock %}

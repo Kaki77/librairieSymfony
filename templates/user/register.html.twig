@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+{{form_start(form,{'attr':{'id':'register'}})}}
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <h2>S'inscrire</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                {{form_label(form.mailUser)}}
+                {{form_widget(form.mailUser)}}
+                <br/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                {{form_label(form.password)}}
+                {{form_widget(form.password)}}
+                <br/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label for="confirmPassword" class="required">Confirmer votre mot de passe</label>
+                <input type="password" id="confirmPassword" class="form-control" required>
+                <br/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                {{form_label(form.nomUser)}}
+                {{form_widget(form.nomUser)}}
+                <br/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                {{form_label(form.prenomUser)}}
+                {{form_widget(form.prenomUser)}}
+                <br/>
+            </div>
+        </div>
+        
+        {% do form.roles.setRendered() %}
+        
+        <div class="row">
+            <div class="col-6">
+                <button class="btn btn-success">S'enregister</button>
+            </div>
+        </div>
+    </div>
+{{form_end(form)}}
+
+{% block javascripts %}
+    <script>
+        $('#register').submit(function()
+        {
+            if($('#user_form_password').val()!=$('#confirmPassword').val())
+            {
+                alert("Les 2 mots de passes ne sont pas identiques");
+                return false;
+            }
+        })
+    </script>
+{% endblock %}
+
+{% endblock %}

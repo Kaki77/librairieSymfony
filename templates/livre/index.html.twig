@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste Livres{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        {% for message in app.flashes('message') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div style="background-color:#757487cb;">
+            <h4 class="font-italic">Barre de Recherche</h4>
+            <br/>
+            <select id="searchSelect">
+                <option value="titreLivre">Titre</option>
+                <option value="themeLivre">Thème</option>
+                <option value="auteur">Auteur</option>
+            </select>
+            <input type="text" id="searchText" size='10'>
+            <select id="selectTheme">
+                <option value=""></option>
+                {% for t in theme %}
+                    <option value="{{t.themeLivre}}">{{t.themeLivre}}</option>
+                {% endfor %}
+            </select>
+            <button type="button" class="btn btn-info" id="searchButton">Rechercher</button>
+        </div>
+
+        <table class="table table-bordered table-sm">
+            {% for l in livre %}
+                <tr id="{{l.isbn}}" class="text-center">
+                    <td>
+                        {% if l.imageLivre !='' %}
+                            <img src="{{l.imageLivre}}" class="mx-auto d-block" width='200' height='250'>
+                        {% else %}
+                            <img src="OIP.jpg" class="mx-auto d-block" width='200' height='250'>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <p>Titre : {{l.titreLivre}}</p>
+                        <p>Auteur : {{l.prenomAuteur}} {{l.nomAuteur}} </p>
+                        <p>Thème : 
+                        {% for theme in l.idThemeLivre %}
+                            {{theme.themeLivre}}
+                        {% endfor %}
+                        </p>
+                        <p>Prix : {{l.prixLivre}}€</p>
+                        <p><a class="btn btn-info btn-sm" href="{{path('showLivre',{'id':l.idLivre})}}">Plus d'informations</a></p>
+                        {% if not app.user or (app.user and not is_granted('ROLE_ADMIN')) %}
+                        <p><a class="btn btn-success btn-sm" href="{{path('reservation',{'id':l.idLivre})}}">Réserver ce livre</a></p>
+                        {% endif %}
+                        {% if app.user and is_granted('ROLE_ADMIN') %}
+                        <p><a class="btn btn-success btn-sm" href="{{path('editLivre',{'id':l.idLivre})}}">Modifier Livre</a></p>
+                        {% endif %}
+                        {% if app.user and is_granted('ROLE_SUPER_ADMIN') %}
+                        <p><a class="btn btn-danger btn-sm" href="{{path('deleteLivre',{'id':l.idLivre})}}">Supprimer Livre</a></p>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $('#selectTheme').hide()
+
+        if(window.innerWidth<=450)
+        {
+            $('table').addClass('table-responsive');
+            $('img').attr('width','150');
+            $('img').attr('height','200');
+        }
+
+        $(window).resize(function()
+        {
+            if(window.innerWidth<=450)
+            {
+                $('img').attr('width','150');
+                $('img').attr('height','200');
+                $('table').addClass('table-responsive');
+            }
+            else
+            {
+                $('img').attr('width','200');
+                $('img').attr('height','250');
+                $('table').removeClass('table-responsive');
+            }
+        })
+
+        $('#searchSelect').change(function()
+        {
+            if($('#searchSelect').val()=='themeLivre')
+            {
+                $('#selectTheme').show();
+                $('#searchText').hide();
+            }
+            else
+            {
+                $('#selectTheme').hide();
+                $('#searchText').show();
+            }
+        })
+
+        $('#searchButton').click(function()
+        {   
+            var select=$('#searchSelect').val();
+            if(select=='themeLivre')
+            {
+                var search=$('#selectTheme').val();
+            }
+            else
+            {
+                var search=$('#searchText').val().toLowerCase().trim();
+            }
+            if(select=='titreLivre')
+            {
+                {% for l in livre %}
+                    if("{{l.titreLivre|lower}}".includes(search))
+                    {
+                        $('#{{l.isbn}}').show();
+                    }
+                    else
+                    {
+                        $('#{{l.isbn}}').hide();
+                    }
+                {% endfor %}
+            }
+            else if(select=='themeLivre')
+            {
+                {% for l in livre %}
+                    {% for theme in l.idThemeLivre %}
+                        if("{{theme.themeLivre}}".includes(search))
+                        {
+                            $('#{{l.isbn}}').show();
+                        }
+                        else
+                        {
+                            $('#{{l.isbn}}').hide();
+                        }
+                    {% endfor %}
+                {% endfor %}
+            }
+            else if(select=='auteur')
+            {
+                {% for l in livre %}
+                    if("{{l.nomAuteur|lower}}".includes(search) || "{{l.prenomAuteur|lower}}".includes(search) || "{{l.nomAuteur|lower}} {{l.prenomAuteur|lower}}".includes(search) || "{{l.prenomAuteur|lower}} {{l.nomAuteur|lower}}".includes(search))
+                    {
+                        $('#{{l.isbn}}').show();
+                    }
+                    else
+                    {
+                        $('#{{l.isbn}}').hide();
+                    }
+                {% endfor %}
+            }
+        })
+    </script>
+    {% endblock %}

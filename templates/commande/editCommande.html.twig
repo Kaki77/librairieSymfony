@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Commande{% endblock %}
+
+{% block body %}
+
+{{form_start(form)}}
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <h2>Editer Commande</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                {{form(form)}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <button class="btn btn-success">Modifier la commande</button>
+            </div>
+        </div>
+    </div>
+{{form_end(form)}}
+
+{% endblock %}

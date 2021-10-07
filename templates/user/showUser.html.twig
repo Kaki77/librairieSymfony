@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Compte{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <p class="text-center underline font-weight-bold">Mes Informations</p>
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <td>
+                        {{utilisateur.mailUser}}
+                    </td>
+                    <td>
+                        {{utilisateur.prenomUser}} {{utilisateur.nomUser}}
+                    </td>
+                    <td>
+                        <a href="{{path('editPassword',{'id':utilisateur.idUser})}}" class="btn btn-success">Modifier Mot de Passe</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <hr>
+        <p class="text-center underline font-weight-bold">Mes Réservations</p>
+        {% if reservation != [] %}
+        {% for r in reservation %}
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td colspan="2">
+                            Réservation #{{r.idReservation}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            {% for livre in r.idLivre %}
+                                {% if livre.imageLivre %}
+                                    <img src="{{livre.imageLivre}}" width="200" height="250">
+                                {% else %}
+                                    <img src="../OIP.jpg" width="200" height="250">
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <p>Livre :
+                                {% for livre in r.idLivre %}
+                                    {{livre.titreLivre}}
+                                {% endfor %}
+                            </p>
+                            <p>Date de réservation : {{r.datereservation.format('Y-m-d')}}<p/>
+                            <p>Prix : {{r.prixReservation}}€</p>
+                            <p>Payé : 
+                                {% if r.estPaye %}
+                                    Oui
+                                {% else %}
+                                    Non
+                                {% endif %}
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script>
+
+     if(window.innerWidth<=450)
+        {
+            $('table').addClass('table-responsive');
+            $('img').attr('width','150');
+            $('img').attr('height','200');
+        }
+
+        $(window).resize(function()
+        {
+            if(window.innerWidth<=450)
+            {
+                $('img').attr('width','150');
+                $('img').attr('height','200');
+                $('table').addClass('table-responsive');
+            }
+            else
+            {
+                $('img').attr('width','200');
+                $('img').attr('height','250');
+                $('table').removeClass('table-responsive');
+            }
+        })
+
+</script
+
+{% endblock %}

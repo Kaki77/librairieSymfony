@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    {% for message in app.flashes('message') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    <div class="container bg-gray">
+        <div class="row">
+            <h1 class="text-center font-italic underline">Nos Derniers arrivages</h1>
+            
+            <div class="col-12 text-center">
+                {% for l in livre|slice(0,5) %}
+                    <div class="col-auto d-inline-block text-center">
+                        {% if l.imageLivre!='' %}
+                            <img src="{{l.imageLivre}}" width='150' height='200'>
+                        {% else %}
+                            <img src="OIP.jpg" width='150' height='200' alt="ok">
+                        {% endif %}
+
+                        <h6 class="text-center">{{l.titreLivre}}</h6>         
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commandes{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% for message in app.flashes('message') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        <div style="background-color:#757487cb;">
+            <h4 class="font-italic">Barre de Recherche</h4>
+            <select id="searchSelect">
+                <option value="livre">Livre</option>
+                <option value="fournisseur">Fournisseur</option>
+                <option value="date">Date</option>
+            </select>
+            <select id="searchLivre" style="width:106px;">
+                <option value=""></option>
+                {% for l in livre %}
+                    <option value="{{l.titreLivre}}">{{l.titreLivre}}</option>
+                {% endfor %}
+            </select>
+            <select id="searchFournisseur">
+                <option value=""></option>
+                {% for f in fournisseur %}
+                    <option value="{{f.raisonSociale}}">{{f.raisonSociale}}</option>
+                {% endfor %}
+            </select>
+            <div id="date">
+                Du
+                <input type="date" id="date_debut">
+                Au
+                <input type="date" id="date_fin">
+            </div>
+            <button type="button" class="btn btn-info" id="searchButton">Rechercher</button>
+        </div>
+
+        <table class="table table-bordered mx-auto w-auto table-sm">
+            <thead>
+                <th>Numéro de commande</th>
+                <th>Livre</th>
+                <th>Fournisseur</th>
+                <th>Date Achat</th>
+                <th>Prix</th>
+                <th>Nombre d'exemplaire</th>
+            </thead>
+            <tbody>
+                {% for c in commande %}
+                <tr id="{{c.numeroCommande}}">
+                    <td>{{c.numeroCommande}}</td>
+                    <td>{{c.idLivre.titreLivre}}</td>
+                    <td>{{c.idFournisseur.raisonSociale}}</td>
+                    <td>{{c.dateCommande.format('d/m/Y')}}</td>
+                    <td>{{c.prixCommande}}€</td>
+                    <td>{{c.nombreExemplaire}}</td>
+                    <td><a class="btn btn-success" href="{{path('editCommande',{'id':c.numeroCommande})}}">Modifier Commande</a></td>
+                    <td><a class="btn btn-danger" href="{{path('deleteCommande',{'id':c.numeroCommande})}}">Supprimer Commande</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+
+<script>
+    $('#searchFournisseur').hide();
+    $('#date').hide();
+    if(window.innerWidth<=1518)
+    {
+        $('table').addClass('table-responsive');
+    }
+
+    $(window).resize(function()
+    {
+        if(window.innerWidth<=1518)
+        {
+            $('table').addClass('table-responsive');
+        }
+        else
+        {
+            $('table').removeClass('table-responsive');
+        }
+    })
+
+    $('#searchSelect').change(function()
+    {
+        if($('#searchSelect').val()=='livre')
+        {
+            $('#searchLivre').show();
+            $('#searchFournisseur').hide();
+            $('#date').hide();
+        }
+        else if($('#searchSelect').val()=='fournisseur')
+        {
+            $('#searchLivre').hide();
+            $('#searchFournisseur').show();
+            $('#date').hide();
+        }
+        else if($('#searchSelect').val()=='date')
+        {
+            $('#searchLivre').hide();
+            $('#searchFournisseur').hide();
+            $('#date').show();
+        }
+    })
+
+    $('#searchButton').click(function()
+    {
+        if($('#searchSelect').val()=='livre' || $('#searchSelect').val()=='fournisseur')
+        {
+            if($('#searchSelect').val()=='livre')
+            {
+                var search=$('#searchLivre').val();
+                {% for c in commande %}
+                    if("{{c.idLivre.titreLivre}}"==search || search=="")
+                    {
+                        $('#{{c.numeroCommande}}').show();
+                    }
+                    else
+                    {
+                        $('#{{c.numeroCommande}}').hide();
+                    }
+                {% endfor %}
+            }
+            else
+            {
+                var search=$('#searchFournisseur').val();
+                {% for c in commande %}
+                    if("{{c.idFournisseur.raisonSociale}}"==search || search=="")
+                    {
+                        $('#{{c.numeroCommande}}').show();
+                    }
+                    else
+                    {
+                        $('#{{c.numeroCommande}}').hide();
+                    }
+                {% endfor %}
+            }
+        }
+        else
+        {
+            var dd=new Date($('#date_debut').val());
+            var df=new Date($('#date_fin').val());
+            {% for c in commande %}
+                var date_commande=new Date("{{c.dateCommande.format('Y-m-d')}}");
+                if((date_commande<df && date_commande>dd) || date_commande.toString()===dd.toString() || date_commande.toString()===df.toString())
+                {
+                    $('#{{c.numeroCommande}}').show();
+                }
+                else
+                {
+                    $('#{{c.numeroCommande}}').hide();
+                }
+            {% endfor %}
+        }
+    })
+</script>
+
+{% endblock %}

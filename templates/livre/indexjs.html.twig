@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste Livres{% endblock %}
+
+{% block body %}
+
+    <div class="container-fluid">
+        <table class="table table-bordered">
+            <thead>
+                <th>ISBN</th>
+                <th>Titre</th>
+                <th>Thème</th>
+                <th>Nombre de Page</th>
+                <th>Format</th>
+                <th>Auteur</th>
+                <th>Editeur</th>
+                <th>Année d'édition</th>
+                <th>Prix</th>
+                <th>Langue</th>
+            </thead>
+            <tbody>
+                {% for l in livre %}
+                <tr>
+                    <td>{{l.ISBN}}</td>
+                    <td>{{l.titreLivre}}</td>
+                    <td>{{l.themeLivre}}</td>
+                    <td>{{l.nbrPagesLivre}}</td>
+                    <td>{{l.formatLivre}}</td>
+                    <td>{{l.nomAuteur}} {{l.prenomAuteur}}</td>
+                    <td>{{l.editeur}}</td>
+                    <td>{{l.anneeEdition}}</td>
+                    <td>{{l.prixVente}}</td>
+                    <td>{{l.langueLivre}}</td>
+                    <td><a class="btn btn-success" href="{{path('editLivre',{'id':l.idLivre})}}">Modifier Livre</a></td>
+                    <td><a class="btn btn-danger" href="#">Supprimer Livre</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% set editPathList=[] %}
+        {% for l in livre %}
+            {% set editPathList=editPathList|merge([path('editLivre',{'id':l.idLivre})]) %}
+        {% endfor %}
+        <div id="App" data-theads="{{theads|json_encode}}" data-entity="{{livre|serialize(format='json')}}" data-editPath={{editPathList|json_encode}}>
+            <router-view name="search"></router-view>
+        </div>
+
+
+
+    </div>
+
+
+{% endblock %}
